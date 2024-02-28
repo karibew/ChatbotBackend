@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from src.configurations.logging import logging
 from src.configurations.redisConfig import RedisConfig
 from src.configurations.zapierConfig import ZapierConfig
-from worker import inbound_outbound_responder,booking_link
+from worker import live_inbound_outbound_responder,inbound_outbound_responder,booking_link
 from src.configurations.utils import (
     modify_number,
     save_message,
@@ -20,6 +20,22 @@ kb_q = Queue("kb_q", connection=RedisConfig().redis)
 ##################################################################
 ###########   Webhook for listening inbound messages  ############
 ##################################################################
+@webhook_router.post(
+    "/kb_chatlive", tags=["webhook"], summary="Webhook for inbound/outbound messages"
+)
+
+async def kb_chatlive(request: Request):
+    form_data = await request.form()
+    live_data = dict(form_data)
+    logging.info("INBOUND MESSAGE %s",live_data)
+    #if sms_data["To"] == os.environ.get("FH_TWILIO_NUMBER"):
+    try:
+        logging.info("Sms payload: %s", live_data)
+
+        return JSONResponse(content={"status": "success", "response": live_inbound_outbound_responder(live_data)}, status_code=200)
+    except Exception as e:
+        logging.exception("Exception occurred")
+    return JSONResponse(content={"status": "success"}, status_code=200)
 
 @webhook_router.post(
     "/fh_webhook", tags=["webhook"], summary="Webhook for inbound/outbound messages"

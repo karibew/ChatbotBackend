@@ -141,14 +141,14 @@ def save_message(
 
 
 def get_bot_name_and_booking_link(contact_info):
-    bot = db.get_prompt(contact_info.get("campaign")).data[0]
+    bot = db.get_prompt('live_chat').data[0]
     if bot.get("id") == BotEnum.Joe_buyer.value:
         bot_name = bot.get("id")
         booking_link = URLs.BUYER_BOOKING_URL.value
     if bot.get("id") == BotEnum.Joe_supplier.value:
         bot_name = bot.get("id")
         booking_link = URLs.SUPPLIER_BOOKING_URL.value
-    return bot_name, booking_link
+    return 'live_chat', 'something'
 
 
 def save_contact(data, contact_phone):
@@ -208,17 +208,17 @@ def prepare_ai_message_history(message_history, message_data, contact_info):
     else:
         variables = {
             "name": "Joe",
-            "lead_first_name": contact_info["firstname"],
-            "buyer_or_supplier": contact_info["type"],
-            "buyer_company_name": contact_info["companyname"],
+            "lead_first_name": 'unknown',
+            "buyer_or_supplier": 'unknown',
+            "buyer_company_name": 'unknown',
             "booking_link": booking_link,
-            "selected_commodities": str(contact_info["commodities"]),
-            "growing_method": contact_info["growing_method"],
-            "need_availability": contact_info["need_availability"],
+            "selected_commodities": 'unknown',
+            "growing_method": 'unknown',
+            "need_availability": 'unknown',
             "bid_request_link": URLs.BID_REQUEST_LINK.value,
             "search_produce_link": URLs.SEARCH_PRODUCE_LINK.value,
         }
-    logging.info("system prompt for >>>>>>>>>>>> %s ", contact_info["contact_phone"])
+    logging.info("system prompt for >>>>>>>>>>>> %s ", 'unknown')
     logging.info("bot name is >>>>>>>>>>>> %s ", bot_name)
     prompt = prompt.format(**variables)
     prompt = {"role": "system", "content": prompt}

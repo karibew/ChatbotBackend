@@ -5,6 +5,7 @@ from src.configurations.supabaseConfig import SupabaseClient
 # from src.configurations.twilioConfig import twilioConfig
 from src.configurations.logging import logging
 from src.harvest.responder import process_message
+from src.harvest.responder import process_live_message
 from src.harvest.booking import send_booking_link
 
 
@@ -23,10 +24,18 @@ ct_timezone = pytz.timezone("US/Central")
 ##################################################################
 
 
-def inbound_outbound_responder(sms: dict):
+def inbound_outbound_responder(chat: dict):
     try:
         
-        return process_message(sms)
+        return process_message(chat)
+    except Exception as e:
+        logging.exception("Exception occurred")
+
+
+def live_inbound_outbound_responder(sms: dict):
+    try:
+
+        return process_live_message(sms)
     except Exception as e:
         logging.exception("Exception occurred")
 
