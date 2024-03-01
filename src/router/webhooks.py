@@ -32,7 +32,8 @@ async def kb_chatlive(request: Request):
     try:
         logging.info("Sms payload: %s", live_data)
 
-        return JSONResponse(content={"status": "success", "response": live_inbound_outbound_responder(live_data)}, status_code=200)
+        message = live_inbound_outbound_responder(live_data)
+        return JSONResponse(content={"status": "success", "response": message}, status_code=200)
     except Exception as e:
         logging.exception("Exception occurred")
     return JSONResponse(content={"status": "success"}, status_code=200)
