@@ -20,13 +20,14 @@ kb_q = Queue("kb_q", connection=RedisConfig().redis)
 ##################################################################
 ###########   Webhook for listening inbound messages  ############
 ##################################################################
-@webhook_router.post(
+@webhook_router.get(
     "/kb_chatlive", tags=["webhook"], summary="Webhook for inbound/outbound messages"
 )
 
 async def kb_chatlive(request: Request):
     form_data = await request.form()
-    live_data = dict(form_data)
+    # live_data = dict(form_data)
+    live_data = dict(request.query_params)
     logging.info("INBOUND MESSAGE %s",live_data)
     #if sms_data["To"] == os.environ.get("FH_TWILIO_NUMBER"):
     try:
